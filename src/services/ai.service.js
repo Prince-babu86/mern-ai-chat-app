@@ -17,7 +17,7 @@ async function generateResponse(content) {
   while (retries > 0) {
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: content,
       });
 
@@ -41,6 +41,19 @@ async function generateResponse(content) {
   throw new Error("AI service overloaded. Try again later.");
 }
 
+async function generateVector(content) {
+  const response = await ai.models.embedContent({
+    model: "gemini-embedding-001",
+    contents: content,
+    config: {
+      outputDimensionality: 768,
+    },
+  });
+
+  return response.embeddings[0].values;
+}
+
 export default {
   generateResponse,
+  generateVector,
 };
