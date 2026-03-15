@@ -5,9 +5,17 @@ import cookie from "cookie";
 import aiService from "../services/ai.service.js";
 import Messages from "../models/message.model.js";
 import vectorService from "../services/vector.service.js";
+import cors from "cors";
 
 async function initSocket(httpServer) {
-  const io = new Server(httpServer, {});
+  const io = new Server(httpServer, {
+    cors: {
+      origin: "http://localhost:5173",
+      allowedHeaders: ["Content-Type", "Authorization"],
+      methods: ["GET", "POST"],
+      credentials: true,
+    },
+  });
 
   io.use(async (socket, next) => {
     let cookies = cookie.parse(socket.handshake.headers?.cookie || "");
